@@ -1,28 +1,21 @@
-### How to run
+### Где что лежит
 
-- run ```npm install``` or ```yarn install```
-- run ```npm start``` or ```yarn start```
-- open ```http://localhost:8080```
+- ветка frontend: фронт приложения
+- ветка backend: бэк приложения
+- ветка deploy: скрипт сборки приложения
 
-For more details, check https://www.gitbook.com/book/webix/webix-jet/details
 
-### Other commands
+### Другие команды
 
-#### Run lint
-
-```
-npm run lint
-```
-
-#### Build production files
+#### Сборка фронта
 
 ```
 npm run build
 ```
 
-After that copy the "codebase" folder to the production server
+#### Отладка фронта
 
+```
+npm run _start
+```
 
-### License
-
-MIT

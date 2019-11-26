@@ -1,0 +1,185 @@
+import sqlDriver
+import datetime
+INV = [False] * 8
+ADCCH = [0, 1, 3, 2, 4, 5, 7, 6]
+OFFSET = [33441, 33506, 33428, 33399, 33420, 33456, 33399, 33439]
+#OFFSET = [0] * 8
+CAL_TABLE = [[[0 for f in range(3)] for g in range(10)] for h in range(8)]
+CAL_TABLE[0][0][0] = 33442
+#CAL_TABLE[0][1][0] = 33264
+#CAL_TABLE[0][2][0] = 33229
+#CAL_TABLE[0][3][0] = 33229
+#CAL_TABLE[0][4][0] = 33229
+#
+#
+CAL_TABLE[1][0][0] = 33508
+#CAL_TABLE[1][1][0] = 33362
+#CAL_TABLE[1][2][0] = 33393
+#CAL_TABLE[1][3][0] = 33393
+#CAL_TABLE[1][4][0] = 33393
+#
+CAL_TABLE[2][0][0] = 33399
+#CAL_TABLE[2][1][0] = 33287
+#CAL_TABLE[2][2][0] = 33253
+#CAL_TABLE[2][3][0] = 33253
+#CAL_TABLE[2][4][0] = 33253
+#
+#
+CAL_TABLE[3][0][0] = 33427
+#CAL_TABLE[3][1][0] = 33341
+#CAL_TABLE[3][2][0] = 33372
+#CAL_TABLE[3][3][0] = 33372
+#CAL_TABLE[3][4][0] = 33372
+#
+CAL_TABLE[4][0][0] = 33419
+#CAL_TABLE[4][1][0] = 33700
+#CAL_TABLE[4][2][0] = 33340
+#CAL_TABLE[4][3][0] = 33340
+#CAL_TABLE[4][4][0] = 33340
+#
+#
+CAL_TABLE[5][0][0] = 33458
+#CAL_TABLE[5][1][0] = 33700
+#CAL_TABLE[5][2][0] = 33265
+#CAL_TABLE[5][3][0] = 33265
+#CAL_TABLE[5][4][0] = 33265
+#
+CAL_TABLE[6][0][0] = 33440
+#CAL_TABLE[6][1][0] = 33700
+#CAL_TABLE[6][2][0] = 33302
+#CAL_TABLE[6][3][0] = 33302
+#CAL_TABLE[6][4][0] = 33302
+#
+#
+CAL_TABLE[7][0][0] = 33398
+#CAL_TABLE[7][1][0] = 33700
+#CAL_TABLE[7][2][0] = 33297
+#CAL_TABLE[7][3][0] = 33297
+#CAL_TABLE[7][4][0] = 33297
+#
+#
+CAL_TABLE[0][0][1] = 12317
+#CAL_TABLE[0][1][1] = 2755
+#CAL_TABLE[0][2][1] = 2328
+#CAL_TABLE[0][3][1] = 7078
+#CAL_TABLE[0][4][1] = 9905
+#
+CAL_TABLE[1][0][1] = 5404
+#CAL_TABLE[1][1][1] = 6271
+#CAL_TABLE[1][2][1] = 6128
+#CAL_TABLE[1][3][1] = 3135
+#CAL_TABLE[1][4][1] = 47
+#
+CAL_TABLE[2][0][1] = 4889
+#CAL_TABLE[2][1][1] = 4513
+#CAL_TABLE[2][2][1] = 4798
+#CAL_TABLE[2][3][1] = 7411
+#CAL_TABLE[2][4][1] = 4265
+#
+CAL_TABLE[3][0][1] = 12040
+#CAL_TABLE[3][1][1] = 6461
+#CAL_TABLE[3][2][1] = 6746
+#CAL_TABLE[3][3][1] = 2375
+#CAL_TABLE[3][4][1] = 5782
+#
+CAL_TABLE[4][0][1] = 8448
+#CAL_TABLE[4][1][1] = 0
+#CAL_TABLE[4][2][1] = 5667
+#CAL_TABLE[4][3][1] = 9762
+#CAL_TABLE[4][4][1] = 1853
+#
+CAL_TABLE[5][0][1] = 8784
+#CAL_TABLE[5][1][1] = 0
+#CAL_TABLE[5][2][1] = 3238
+#CAL_TABLE[5][3][1] = 95
+#CAL_TABLE[5][4][1] = 8171
+#
+CAL_TABLE[6][0][1] = 8722
+#CAL_TABLE[6][1][1] = 0
+#CAL_TABLE[6][2][1] = 7000
+#CAL_TABLE[6][3][1] = 3238
+#CAL_TABLE[6][4][1] = 8076
+#
+CAL_TABLE[7][0][1] = 9046
+#CAL_TABLE[7][1][1] = 0
+#CAL_TABLE[7][2][1] = 4095
+#CAL_TABLE[7][3][1] = 6905
+#CAL_TABLE[7][4][1] = 1900
+#
+#
+CAL_TABLE[0][0][2] = 4132
+#CAL_TABLE[0][1][2] = 58
+#CAL_TABLE[0][2][2] = 49
+#CAL_TABLE[0][3][2] = 149
+#CAL_TABLE[0][4][2] = 209
+#
+CAL_TABLE[1][0][2] = 1813
+#CAL_TABLE[1][1][2] = 132
+#CAL_TABLE[1][2][2] = 129
+#CAL_TABLE[1][3][2] = 66
+#CAL_TABLE[1][4][2] = 1
+#
+CAL_TABLE[2][0][2] = 1640
+#CAL_TABLE[2][1][2] = 95
+#CAL_TABLE[2][2][2] = 101
+#CAL_TABLE[2][3][2] = 156
+#CAL_TABLE[2][4][2] = 90
+#
+CAL_TABLE[3][0][2] = 4039
+#CAL_TABLE[3][1][2] = 136
+#CAL_TABLE[3][2][2] = 142
+#CAL_TABLE[3][3][2] = 50
+#CAL_TABLE[3][4][2] = 122
+#
+CAL_TABLE[4][0][2] = 2839
+#CAL_TABLE[4][1][2] = 150
+#CAL_TABLE[4][2][2] = 119
+#CAL_TABLE[4][3][2] = 205
+#CAL_TABLE[4][4][2] = 39
+#
+CAL_TABLE[5][0][2] = 2952
+#CAL_TABLE[5][1][2] = 150
+#CAL_TABLE[5][2][2] = 68
+#CAL_TABLE[5][3][2] = 2
+#CAL_TABLE[5][4][2] = 172
+#
+CAL_TABLE[6][0][2] = 2931
+#CAL_TABLE[6][1][2] = 140
+#CAL_TABLE[6][2][2] = 147
+#CAL_TABLE[6][3][2] = 68
+#CAL_TABLE[6][4][2] = 170
+#
+CAL_TABLE[7][0][2] = 3040
+#CAL_TABLE[7][1][2] = 150
+#CAL_TABLE[7][2][2] = 86
+#CAL_TABLE[7][3][2] = 145
+#CAL_TABLE[7][4][2] = 40
+
+#CAL_TABLE[0][0][0] = 33081
+#CAL_TABLE[0][0][1] = 10760
+#CAL_TABLE[0][0][2] = 161
+#
+#CAL_TABLE[1][0][0] = 33100
+#CAL_TABLE[1][0][1] = 31546
+#CAL_TABLE[1][0][2] = 472
+#
+#CAL_TABLE[2][0][0] = 33139
+#CAL_TABLE[2][0][1] = 20050
+#CAL_TABLE[2][0][2] = 300
+#
+#CAL_TABLE[3][0][0] = 33108
+#CAL_TABLE[3][0][1] = 17644
+#CAL_TABLE[3][0][2] = 264
+
+points = {"1": [0] * 10, "2": [0] * 10}
+sqlDriver.save_adc_settings(INV, ADCCH, OFFSET)
+sqlDriver.save_cal_tables(CAL_TABLE)
+sqlDriver.save_cal_points(points)
+
+data = {'CTMAXX': 400, 'CTMAXY': 200,
+        'WMAX': 100, 'WTHR': 0, 'PERIOD': 0, 'TABLUSE': False, 'GOST': False,
+        'COMPTT': "0", 'SPEEDT': '9600', 'DYN': True, 'KKORR': '1', 'W_THRES': 100,
+        'Z_LEVEL': 50, 'CALMTIME': 15, 'L_PLAT': 4110, 'COMPT': "COM7",
+        'SPEED': 115200, 'BRW': 1520, 'BRH': 4110, 'BRB': 8904, 'PROGSTAT': 4,
+        'CURRSOST': 0, 'CURRWAG': 0}
+sqlDriver.save_strange_table(data)
